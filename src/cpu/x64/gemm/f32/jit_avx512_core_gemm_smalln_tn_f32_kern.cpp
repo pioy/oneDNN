@@ -816,7 +816,7 @@ dnnl_status_t jit_avx512_core_gemm_smalln_tn_f32(const char *transa,
     max_num_threads = smalln_set_num_threads(m, k, max_num_threads);
 
     {
-        __m512i areg = {-1ll, -1ll, -1ll, -1ll,-1ll, -1ll, -1ll, -1ll }; 
+        int64_t areg[8] = {-1ll, -1ll, -1ll, -1ll,-1ll, -1ll, -1ll, -1ll }; 
         auto addr = &areg;
         asm  __volatile__("vmovups %0, %%zmm24" : : "m"(addr) );
     }
