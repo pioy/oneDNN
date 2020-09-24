@@ -143,6 +143,9 @@ struct xbyak_gemm_smalln_tn : public jit_generator {
         TEMPZMM = TEMPZMM_;
         perm = perm_;
 
+        for (int ii = 0; ii < 32; ii++) // 0-31
+            vpxorq(zmm_reg[ii], zmm_reg[ii], zmm_reg[ii]);
+
         // Start of kernel.
         preamble();
         sub(rsp, STACKSIZE);
