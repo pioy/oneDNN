@@ -23,6 +23,7 @@
 #include "cpu/x64/gemm/f32/jit_avx512_core_gemm_smalln_tn_f32_kern.hpp"
 #include "cpu/x64/gemm/gemm_info.hpp"
 #include "cpu/x64/jit_generator.hpp"
+#include <x86intrin.h>
 
 namespace dnnl {
 namespace impl {
@@ -814,6 +815,12 @@ dnnl_status_t jit_avx512_core_gemm_smalln_tn_f32(const char *transa,
 
     max_num_threads = smalln_set_num_threads(m, k, max_num_threads);
 
+    {
+        __m512i areg = {-1ll, -1ll, -1ll, -1ll,-1ll, -1ll, -1ll, -1ll }; 
+        auto addr = &areg;
+        asm  __volatile__("vmovups %0, %%zmm24" : : "m"(addr) );
+    }
+    
     if (max_num_threads == 1) {
         sgemm_smalln_tn(m, n, k, alpha, A, lda, B, ldb, beta, C, ldc);
         return dnnl_success;
